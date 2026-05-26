@@ -1,33 +1,25 @@
 package com.example.stockservice.service;
-
 import com.example.stockservice.entity.Product;
 import com.example.stockservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-
     private final ProductRepository productRepository;
-
-    // Test verisi eklemek için
     public Product createProduct(Product product) {
         return productRepository.save(product);
     }
-
-    // SİPARİŞ SERVİSİNİN ÇAĞIRACAĞI METOT
     @Transactional
     public boolean deductStock(Long productId, Integer quantity) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Ürün bulunamadı!"));
-
         if (product.getStockQuantity() >= quantity) {
             product.setStockQuantity(product.getStockQuantity() - quantity);
             productRepository.save(product);
-            return true; // Stok yeterliydi ve düşüldü
+            return true; 
         }
-        return false; // Stok yetersiz
+        return false; 
     }
 }
